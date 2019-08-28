@@ -2,15 +2,15 @@
 
 PACKAGES := $(shell go list ./... | grep -v /mock)
 
+build:
+	go build -o bin/fargate main.go
+
 mocks:
 	go get github.com/golang/mock/mockgen
 	go generate $(PACKAGES)
 
 test:
 	go test -race -cover $(PACKAGES)
-
-build:
-	go build -o bin/fargate main.go
 
 dist:
 	GOOS=darwin GOARCH=amd64 go build -o dist/build/fargate-darwin-amd64/fargate main.go
@@ -31,3 +31,7 @@ dist:
 	find dist/build -name *.zip -exec mv {} dist \;
 
 	rm -rf dist/build
+
+clean:
+	rm -f bin/fargate
+	rm -rf dist
